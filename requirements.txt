@@ -1,6 +1,6 @@
 click==8.2.0
 joblib==1.5.0
-lib_ml @ https://github.com/remla25-team20/lib-ml/releases/download/v0.1.4/lib_ml-0.1.4-py3-none-any.whl
+lib_ml @ https://github.com/remla25-team20/lib-ml/releases/download/v0.1.5/lib_ml-0.1.5-py3-none-any.whl
 nltk==3.9.1
 numpy==2.2.6
 pandas==2.2.3
