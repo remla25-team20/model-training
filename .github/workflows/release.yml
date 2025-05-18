@@ -1,0 +1,32 @@
+name: Release models
+
+on:
+  push:
+    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+
+jobs:
+    train-and-release:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout main branch
+              uses: actions/checkout@v4
+
+            - name: Set up Python
+              uses: actions/setup-python@v4
+              with:
+                python-version: '3.x'
+            
+            - name: Install dependencies
+              run: python -m pip install --upgrade pip |
+                   pip install -r requirements.txt
+                
+            - name: Run training pipeline
+              run: python src/training_pipe.py
+            
+            - name: Release model and preprocessor
+              id: release
+              uses: softprops/action-gh-release@v2
+              with:
+                files: |
+                  models/*
+

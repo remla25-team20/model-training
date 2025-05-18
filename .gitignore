@@ -2,3 +2,4 @@ models/
 output/
 data/
 *.tsv
+*vscode/
