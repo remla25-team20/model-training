@@ -32,6 +32,5 @@ jobs:
               with:
                 files: |
                   models/*
-                    env:
               env:
                 GITHUB_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN }}
