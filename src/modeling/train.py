@@ -1,4 +1,5 @@
 import joblib
+import os
 import dvc.api
 
 from pathlib import Path
@@ -13,7 +14,10 @@ def train(dataset_dir: Path, target_dir):
     classifier = GaussianNB()
     classifier.fit(X_train, y_train)
 
-    joblib.dump(classifier, target_dir / "model.joblib")
+    if not os.path.exists(target_dir):
+        os.makedirs(target_dir)
+
+    joblib.dump(classifier, target_dir / "Sentiment_Analysis_Model.joblib")
 
 if __name__ == "__main__":
     train(dataset_dir=Path(PARAMS['interim_data_directory']), target_dir=Path(PARAMS['models_directory']))

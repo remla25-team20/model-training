@@ -7,7 +7,7 @@ from sklearn.metrics import confusion_matrix, accuracy_score
 PARAMS = dvc.api.params_show("params.yaml")
 
 def predict(model_dir: Path, interim_data_dir: Path):
-    classifier = joblib.load(model_dir / "model.joblib")
+    classifier = joblib.load(model_dir / "Sentiment_Analysis_Model.joblib")
     X_test = joblib.load(interim_data_dir / "X_test.joblib")
     y_test = joblib.load(interim_data_dir / "y_test.joblib")
 

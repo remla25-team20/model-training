@@ -1,6 +1,6 @@
 test_size: 0.2
 random_state: 42
-data_directory_id: 1JXfC0or2ISz0eYhW2p1VwfhjDYbWwY4p
+data_directory_gdrive_id: 1JXfC0or2ISz0eYhW2p1VwfhjDYbWwY4p
 # data_directory_id: 1BP-1kjqpC0wA5RfY5a7rp-AMK_FgDg1t
 
 data_directory: data/external/
