@@ -23,6 +23,8 @@ def preprocess(dataset: Path, interim_data_dir: Path, models_dir: Path):
     
     if not os.path.exists(interim_data_dir):
         os.makedirs(interim_data_dir)
+    if not os.path.exists(models_dir):
+        os.makedirs(models_dir)
 
     joblib.dump(X_train, interim_data_dir / "X_train.joblib")
     joblib.dump(X_test, interim_data_dir / "X_test.joblib")

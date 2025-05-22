@@ -30,7 +30,7 @@ jobs:
               run: poetry run python src/data/preprocess.py
 
             - name: Train model
-              run: poetry run python src/data/modeling/train.py
+              run: poetry run python src/modeling/train.py
 
             - name: Release model and preprocessor
               id: release
