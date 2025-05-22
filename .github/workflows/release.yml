@@ -14,18 +14,24 @@ jobs:
             - name: Set up Python
               uses: actions/setup-python@v4
               with:
-                python-version: '3.x'
+                python-version: '3.13'
+            
+            - name: Install Poetry
+              run: python -m pip install --upgrade pip |
+                   pip install poetry
             
             - name: Install dependencies
-              run: python -m pip install --upgrade pip |
-                   pip install -r requirements.txt
+              run: poetry install
             
-            - name: Prepare directories
-              run: mkdir -p models
-                
-            - name: Run training pipeline
-              run: python src/training_pipe.py
-            
+            - name: Download data from gdrive
+              run: poetry run python src/data/data_download.py
+
+            - name: Preprocess data using lib-ml
+              run: poetry run python src/data/preprocess.py
+
+            - name: Train model
+              run: poetry run python src/data/modeling/train.py
+
             - name: Release model and preprocessor
               id: release
               uses: softprops/action-gh-release@v2
