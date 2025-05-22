@@ -13,6 +13,6 @@ six==1.17.0
 threadpoolctl==3.6.0
 tqdm==4.67.1
 tzdata==2025.2
-dvc
-dvc-gdrive
-gdown
+dvc==3.59.2
+dvc-gdrive==3.0.1
+gdown==5.2.0
