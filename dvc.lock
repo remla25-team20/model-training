@@ -34,24 +34,24 @@ stages:
         file_path_gdrive: restaurant-reviews/training-reviews.tsv
         interim_data_directory: data/interim/
         models_directory: models/
-        random_state: 42
+        random_state: 47
         test_size: 0.2
     outs:
     - path: data/interim/X_test.joblib
       hash: md5
-      md5: 073037a2d72bb092ac06ff56be352b84
+      md5: 0f168c4855c77fd8906526537b756185
       size: 39105
     - path: data/interim/X_train.joblib
       hash: md5
-      md5: 5a013127d8c1518302e92476771cf3cd
+      md5: f0a98706aef85591da9adf6649a7fcdc
       size: 155761
     - path: data/interim/y_test.joblib
       hash: md5
-      md5: 079ffd61d34ffb6a4cdf149536a8076c
+      md5: 842cabce7118022309c3b37fc0a4a8f6
       size: 6559
     - path: data/interim/y_train.joblib
       hash: md5
-      md5: adffcb4dd1b9053ab21a5409e173e156
+      md5: fd2a09d325a0f5ea6756e6aa362532b9
       size: 23840
     - path: models/Sentiment_Analysis_Preprocessor.joblib
       hash: md5
@@ -62,11 +62,11 @@ stages:
     deps:
     - path: data/interim/X_train.joblib
       hash: md5
-      md5: 5a013127d8c1518302e92476771cf3cd
+      md5: f0a98706aef85591da9adf6649a7fcdc
       size: 155761
     - path: data/interim/y_train.joblib
       hash: md5
-      md5: adffcb4dd1b9053ab21a5409e173e156
+      md5: fd2a09d325a0f5ea6756e6aa362532b9
       size: 23840
     params:
       params.yaml:
@@ -75,7 +75,7 @@ stages:
     outs:
     - path: models/Sentiment_Analysis_Model.joblib
       hash: md5
-      md5: 0951b1fee8cb1f998d31541f60bc1f8a
+      md5: 7081cc722d7e07642fb7eaa6cf247fb7
       size: 1639
   metrics:
     cmd: poetry run python src/modeling/evaluation.py
@@ -101,15 +101,15 @@ stages:
     deps:
     - path: data/interim/X_test.joblib
       hash: md5
-      md5: 073037a2d72bb092ac06ff56be352b84
+      md5: 0f168c4855c77fd8906526537b756185
       size: 39105
     - path: data/interim/y_test.joblib
       hash: md5
-      md5: 079ffd61d34ffb6a4cdf149536a8076c
+      md5: 842cabce7118022309c3b37fc0a4a8f6
       size: 6559
     - path: models/Sentiment_Analysis_Model.joblib
       hash: md5
-      md5: 0951b1fee8cb1f998d31541f60bc1f8a
+      md5: 7081cc722d7e07642fb7eaa6cf247fb7
       size: 1639
     params:
       params.yaml:
@@ -119,5 +119,5 @@ stages:
     outs:
     - path: reports/metrics//accuracy.json
       hash: md5
-      md5: a39494eee2f2d862197f5397b5d706fc
+      md5: 981b652daff0a83f2a62ec235e4345da
       size: 32
