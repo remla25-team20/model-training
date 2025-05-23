@@ -1,0 +1,50 @@
+stages:
+  get_data:
+    cmd: poetry run python src/data/data_download.py
+    deps:
+    - src/data/data_download.py
+    params:
+    - data_directory
+    - data_directory_gdrive_id
+    outs: # keep paths in sync with params.yaml
+    - data/external/restaurant-reviews/training-reviews.tsv
+  preprocess:
+    cmd: poetry run python src/data/preprocess.py
+    deps:
+    - src/data/preprocess.py
+    - data/external
+    params:
+    - data_directory
+    - file_path_gdrive
+    - interim_data_directory
+    - models_directory
+    - test_size
+    - random_state
+    outs: # keep paths in sync with params.yaml
+    - data/interim/X_train.joblib
+    - data/interim/y_train.joblib
+    - data/interim/X_test.joblib
+    - data/interim/y_test.joblib
+    - models/Sentiment_Analysis_Preprocessor.joblib
+  train:
+    cmd: poetry run python src/modeling/train.py
+    deps:
+    - data/interim/X_train.joblib
+    - data/interim/y_train.joblib
+    params:
+    - interim_data_directory
+    - models_directory
+    outs: # keep paths in sync with params.yaml
+    - models/Sentiment_Analysis_Model.joblib
+  metrics:
+    cmd: poetry run python src/modeling/evaluation.py
+    deps:
+    - models/Sentiment_Analysis_Model.joblib
+    - data/interim/X_test.joblib
+    - data/interim/y_test.joblib
+    params:
+    - interim_data_directory
+    - models_directory
+    # TODO: specify outs for resulting metrics files
+    # outs:
+    # - 

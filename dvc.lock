@@ -1,0 +1,98 @@
+schema: '2.0'
+stages:
+  get_data:
+    cmd: poetry run python src/data/data_download.py
+    deps:
+    - path: src/data/data_download.py
+      hash: md5
+      md5: b9220ddf76f09fbbc0f512a0234f0846
+      size: 408
+    params:
+      params.yaml:
+        data_directory: data/external/
+        data_directory_gdrive_id: 1JXfC0or2ISz0eYhW2p1VwfhjDYbWwY4p
+    outs:
+    - path: data/external/restaurant-reviews/training-reviews.tsv
+      hash: md5
+      md5: f301a6d162636b3c5e31b168ac0052aa
+      size: 54685
+  preprocess:
+    cmd: poetry run python src/data/preprocess.py
+    deps:
+    - path: data/external
+      hash: md5
+      md5: 35de2e88a495c41fe2f554efdfcda303.dir
+      size: 54685
+      nfiles: 1
+    - path: src/data/preprocess.py
+      hash: md5
+      md5: 78ffc8f9ab6f438221e95cf41e565935
+      size: 1424
+    params:
+      params.yaml:
+        data_directory: data/external/
+        file_path_gdrive: restaurant-reviews/training-reviews.tsv
+        interim_data_directory: data/interim/
+        models_directory: models/
+        random_state: 42
+        test_size: 0.2
+    outs:
+    - path: data/interim/X_test.joblib
+      hash: md5
+      md5: 073037a2d72bb092ac06ff56be352b84
+      size: 39105
+    - path: data/interim/X_train.joblib
+      hash: md5
+      md5: 5a013127d8c1518302e92476771cf3cd
+      size: 155761
+    - path: data/interim/y_test.joblib
+      hash: md5
+      md5: 079ffd61d34ffb6a4cdf149536a8076c
+      size: 6559
+    - path: data/interim/y_train.joblib
+      hash: md5
+      md5: adffcb4dd1b9053ab21a5409e173e156
+      size: 23840
+    - path: models/Sentiment_Analysis_Preprocessor.joblib
+      hash: md5
+      md5: 8b11eb49fb674b5164ea24f8fc3dbce5
+      size: 1176
+  train:
+    cmd: poetry run python src/modeling/train.py
+    deps:
+    - path: data/interim/X_train.joblib
+      hash: md5
+      md5: 5a013127d8c1518302e92476771cf3cd
+      size: 155761
+    - path: data/interim/y_train.joblib
+      hash: md5
+      md5: adffcb4dd1b9053ab21a5409e173e156
+      size: 23840
+    params:
+      params.yaml:
+        interim_data_directory: data/interim/
+        models_directory: models/
+    outs:
+    - path: models/Sentiment_Analysis_Model.joblib
+      hash: md5
+      md5: 0951b1fee8cb1f998d31541f60bc1f8a
+      size: 1639
+  metrics:
+    cmd: poetry run python src/modeling/evaluation.py
+    deps:
+    - path: data/interim/X_test.joblib
+      hash: md5
+      md5: 073037a2d72bb092ac06ff56be352b84
+      size: 39105
+    - path: data/interim/y_test.joblib
+      hash: md5
+      md5: 079ffd61d34ffb6a4cdf149536a8076c
+      size: 6559
+    - path: models/Sentiment_Analysis_Model.joblib
+      hash: md5
+      md5: 0951b1fee8cb1f998d31541f60bc1f8a
+      size: 1639
+    params:
+      params.yaml:
+        interim_data_directory: data/interim/
+        models_directory: models/
