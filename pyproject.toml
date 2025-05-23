@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "model-training-team20"
+version = "0.1.0"
+description = ""
+authors = ["Adrian Josan <josan.adrian11@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.10"
+click = "8.2.0"
+joblib = "1.5.0"
+nltk = "3.9.1"
+numpy = "2.2.6"
+pandas = "2.2.3"
+python-dateutil = "2.9.0.post0"
+pytz = "2025.2"
+regex = "2024.11.6"
+scikit-learn = "1.6.1"
+scipy = "1.15.3"
+six = "1.17.0"
+threadpoolctl = "3.6.0"
+tqdm = "4.67.1"
+tzdata = "2025.2"
+dvc = "3.59.2"
+dvc-gdrive = "3.0.1"
+gdown = "5.2.0"
+lib-ml = { url = "https://github.com/remla25-team20/lib-ml/releases/download/v0.1.5/lib_ml-0.1.5-py3-none-any.whl" }
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
