@@ -9,7 +9,7 @@ from lib_ml import preprocessing
 
 PARAMS = dvc.api.params_show("params.yaml")
 
-def preprocess(dataset: Path, interim_data_dir: Path, models_dir: Path):
+def preprocess(dataset: Path, interim_data_dir: Path, models_dir: Path, test_size, random_state):
 
     preprocessor, preprocessed_data = preprocessing.preprocess(dataset)
     X = preprocessed_data.toarray()
@@ -17,8 +17,8 @@ def preprocess(dataset: Path, interim_data_dir: Path, models_dir: Path):
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y,
-        test_size=PARAMS['test_size'],
-        random_state=PARAMS['random_state']
+        test_size=test_size,
+        random_state=random_state
         )
     
     if not os.path.exists(interim_data_dir):
@@ -34,7 +34,9 @@ def preprocess(dataset: Path, interim_data_dir: Path, models_dir: Path):
 
 if __name__ == "__main__":
     preprocess(
-        dataset=Path(PARAMS['data_directory']) / "restaurant-reviews/training-reviews.tsv",
+        dataset=Path(PARAMS['data_directory']) / PARAMS['file_path_gdrive'],
         interim_data_dir=Path(PARAMS['interim_data_directory']),
-        models_dir=Path(PARAMS['models_directory'])
+        models_dir=Path(PARAMS['models_directory']),
+        test_size=PARAMS['test_size'],
+        random_state=PARAMS['random_state']
         )
