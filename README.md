@@ -84,7 +84,23 @@ import dvc.api
 params = dvc.api.params_show()
 ```
 
-## Usage
+## 🔁 Reproducing Results with DVC
+
+To reproduce the entire pipeline (download data, preprocess, train, evaluate) using the current parameters and dependencies:
+```
+dvc repro
+```
+This command will automatically detect changes in:
+- Parameters (params.yaml)
+- Code (src/)
+- Data dependencies
+
+...and re-run only the necessary stages. It's useful when:
+- You've changed model parameters
+- You've updated preprocessing or training scripts
+- You need to reproduce results from scratch or on another machine
+
+## External Model Usage
 
 ```python
 import requests
