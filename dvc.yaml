@@ -36,7 +36,7 @@ stages:
     - models_directory
     outs: # keep paths in sync with params.yaml
     - models/Sentiment_Analysis_Model.joblib
-  metrics:
+  eval:
     cmd: poetry run python src/modeling/evaluation.py
     deps:
     - models/Sentiment_Analysis_Model.joblib
@@ -45,6 +45,6 @@ stages:
     params:
     - interim_data_directory
     - models_directory
-    # TODO: specify outs for resulting metrics files
-    # outs:
-    # - 
+    - metrics_directory
+    metrics:
+    - ${metrics_directory}/accuracy.json

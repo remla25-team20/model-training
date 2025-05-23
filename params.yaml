@@ -7,3 +7,4 @@ file_path_gdrive: restaurant-reviews/training-reviews.tsv
 data_directory: data/external/
 interim_data_directory: data/interim/
 models_directory: models/
+metrics_directory: reports/metrics/

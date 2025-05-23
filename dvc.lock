@@ -96,3 +96,28 @@ stages:
       params.yaml:
         interim_data_directory: data/interim/
         models_directory: models/
+  eval:
+    cmd: poetry run python src/modeling/evaluation.py
+    deps:
+    - path: data/interim/X_test.joblib
+      hash: md5
+      md5: 073037a2d72bb092ac06ff56be352b84
+      size: 39105
+    - path: data/interim/y_test.joblib
+      hash: md5
+      md5: 079ffd61d34ffb6a4cdf149536a8076c
+      size: 6559
+    - path: models/Sentiment_Analysis_Model.joblib
+      hash: md5
+      md5: 0951b1fee8cb1f998d31541f60bc1f8a
+      size: 1639
+    params:
+      params.yaml:
+        interim_data_directory: data/interim/
+        metrics_directory: reports/metrics/
+        models_directory: models/
+    outs:
+    - path: reports/metrics//accuracy.json
+      hash: md5
+      md5: a39494eee2f2d862197f5397b5d706fc
+      size: 32
