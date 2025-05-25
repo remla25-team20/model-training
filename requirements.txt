@@ -1,0 +1,4 @@
+joblib
+dvc[gdrive]
+gdown
+# lib_ml  # Don't add this to requirements.txt
