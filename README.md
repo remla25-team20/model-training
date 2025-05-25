@@ -78,6 +78,38 @@ poetry run python src/data/data_download.py
 ```
 ---
 
+## ✅ Linting: Code Quality Checks
+
+We use both **pylint** and **flake8** to enforce code quality in the `src/` directory. These are automatically checked in CI (see badge above), but can also be run locally:
+
+### 🔧 Run locally using poetry
+
+```bash
+poetry run pylint src/
+poetry run flake8 src/
+```
+
+> ℹ️ We intentionally run linters **only on the `src/` folder** to exclude files like `__init__.py` for plugin registration and DVC-related files from lint scope.
+
+> ⚠️ If you run `flake8` without specifying `src/`, you will see **intentional violations** such as:
+> ```
+> ./pylint_custom_checks/__init__.py:1:1: F401 '.hardcoded_params.register' imported but unused
+> ```
+> This is expected. The `register()` function must be imported to activate the custom plugin, even if not directly used.
+
+### 🧠 Lint goals
+
+- `pylint` includes a **custom checker** for detecting hardcoded ML hyperparameters (e.g. `learning_rate=0.01`).
+- `flake8` enforces general formatting rules, with relaxed spacing and complexity rules defined in `.flake8`.
+
+```bash
+# .flake8 file is preconfigured to allow:
+# - One blank line between functions
+# - Line length up to 150
+# - Ignored W503 (line break before binary op)
+```
+---
+
 ## 📌 Parameters with DVC
 
 All pipeline parameters are stored in `params.yaml` and versioned using DVC. These are accessed in Python scripts using:
