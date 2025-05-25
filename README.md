@@ -1,3 +1,5 @@
+[![Pylint](https://github.com/remla25-team20/model-training/actions/workflows/pylint.yml/badge.svg)](https://github.com/remla25-team20/model-training/actions/workflows/pylint.yml)
+
 # model-training
 
 This repository contains the training pipeline for a sentiment analysis model built for restaurant reviews, used as part of the Release Engineering course.

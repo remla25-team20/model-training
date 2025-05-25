@@ -1,0 +1,54 @@
+[MASTER]
+init-hook='import sys; sys.path.append("src")'
+jobs=1
+persistent=yes
+py-version=3.10
+
+[MESSAGES CONTROL]
+# disable some tedious warnings
+disable=
+    missing-docstring,
+    invalid-name,
+    too-few-public-methods,
+    too-many-arguments,
+    too-many-locals,
+    too-many-branches,
+    too-many-statements,
+    C0411,  # wrong-import-order
+    W0212,  # protected-access 
+
+[REPORTS]
+reports=no
+score=yes
+
+[FORMAT]
+max-line-length=150
+
+[DESIGN]
+max-args=5
+max-locals=15
+max-returns=6
+max-branches=12
+max-statements=50
+
+[TYPECHECK]
+ignore-none=yes
+ignore-on-opaque-inference=yes
+generated-members=numpy.*,torch.*
+
+[BASIC]
+good-names=i,j,k,ex,Run,_
+bad-names=foo,bar,baz,toto,tutu,tata
+argument-naming-style=snake_case
+variable-naming-style=snake_case
+function-naming-style=snake_case
+class-naming-style=PascalCase
+const-naming-style=UPPER_CASE
+method-naming-style=snake_case
+module-naming-style=snake_case
+
+[LOGGING]
+logging-format-style=old
+
+[IMPORTS]
+known-third-party=numpy,sklearn,pandas,torch

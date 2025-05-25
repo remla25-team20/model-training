@@ -1,7 +1,7 @@
-import joblib
-import dvc.api
-
 from pathlib import Path
+
+import dvc.api
+import joblib
 from sklearn.metrics import confusion_matrix, accuracy_score
 
 PARAMS = dvc.api.params_show("params.yaml")

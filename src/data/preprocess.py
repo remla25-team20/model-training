@@ -20,7 +20,7 @@ def preprocess(dataset: Path, interim_data_dir: Path, models_dir: Path, test_siz
         test_size=test_size,
         random_state=random_state
         )
-    
+
     if not os.path.exists(interim_data_dir):
         os.makedirs(interim_data_dir)
     if not os.path.exists(models_dir):
