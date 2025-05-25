@@ -48,3 +48,6 @@ stages:
     - metrics_directory
     metrics:
     - ${metrics_directory}/accuracy.json
+    - ${metrics_directory}/f1_accuracy.json
+    - ${metrics_directory}/precision.json
+    - ${metrics_directory}/recall.json
