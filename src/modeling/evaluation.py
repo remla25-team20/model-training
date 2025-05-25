@@ -22,4 +22,4 @@ if __name__ == "__main__":
     predict(
         model_dir=Path(PARAMS['models_directory']),
         interim_data_dir=Path(PARAMS['interim_data_directory'])
-        )
+    )

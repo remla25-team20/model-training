@@ -1,0 +1,17 @@
+[flake8]
+
+# align with pylint
+max-line-length = 150 
+exclude = .git,__pycache__,venv,.venv
+
+# Avoid high complexity
+max-complexity = 10
+
+# the indentation that we used to
+indent-size = 4   
+
+# This 2 errors asks for 2 blank lines
+ignore = E302,E305
+
+# shows the statistics at the end of the run, incase of errors
+show-statistics = True

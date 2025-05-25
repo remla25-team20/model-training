@@ -1,0 +1,64 @@
+name: Code Quality Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  pylint:
+    name: Pylint check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout model-training repo
+        uses: actions/checkout@v3
+
+      - name: Checkout lib-ml repo
+        uses: actions/checkout@v3
+        with:
+          repository: remla25-team20/lib-ml
+          path: lib-ml
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies for pylint
+        run: |
+          pip install -r requirements.txt
+          pip install pylint
+          pip install -e ./lib-ml
+
+      - name: Run pylint
+        run: pylint src/
+
+  flake8:
+    name: Flake8 check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout model-training repo
+        uses: actions/checkout@v3
+
+      - name: Checkout lib-ml repo
+        uses: actions/checkout@v3
+        with:
+          repository: remla25-team20/lib-ml
+          path: lib-ml
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies for flake8
+        run: |
+          pip install -r requirements.txt
+          pip install flake8
+          pip install -e ./lib-ml
+
+      - name: Run flake8
+        run: flake8 src/

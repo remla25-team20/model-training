@@ -22,7 +22,7 @@ reports=no
 score=yes
 
 [FORMAT]
-max-line-length=150
+max-line-length=150 
 
 [DESIGN]
 max-args=5

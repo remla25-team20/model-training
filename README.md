@@ -1,4 +1,5 @@
-[![Pylint](https://github.com/remla25-team20/model-training/actions/workflows/pylint.yml/badge.svg)](https://github.com/remla25-team20/model-training/actions/workflows/pylint.yml)
+[![Code Quality](https://github.com/remla25-team20/model-training/actions/workflows/CodeQuality.yml/badge.svg)](https://github.com/remla25-team20/model-training/actions/workflows/CodeQuality.yml)
+
 
 # model-training
 
