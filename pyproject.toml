@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Adrian Josan <josan.adrian11@gmail.com>"]
 readme = "README.md"
-package-mode = false
+packages = [{include = "*", from="src"}]
 
 [tool.poetry.dependencies]
 python = ">=3.10"
@@ -28,6 +28,10 @@ gdown = "5.2.0"
 lib-ml = { url = "https://github.com/remla25-team20/lib-ml/releases/download/v0.1.5/lib_ml-0.1.5-py3-none-any.whl" }
 pylint = "^3.3.7"
 flake8 = "^7.2.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "8.3.5"
+coverage = "^7.8.2"
 
 
 [build-system]

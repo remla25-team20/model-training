@@ -37,6 +37,7 @@ def predict(model_dir: Path, interim_data_dir: Path, metrics_directory: Path):
     with open(metrics_directory / "recall.json", "w", encoding="utf-8") as out:
         json.dump({"recall": recall}, out)
 
+    return tpr, recall, accuracy, f1_acc
 
 if __name__ == "__main__":
     predict(
