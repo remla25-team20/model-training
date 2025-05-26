@@ -60,7 +60,7 @@ jobs:
           mkdir -p badges
           mv pylint.svg badges/pylint_badge.svg
           git add badges/pylint_badge.svg
-          git commit -m "Update pylint badge"
+          git commit -m "Update pylint badge" || true # see below
           git push || true  # adding true statement to avoid error on "nothing to commit"
 
   flake8:
