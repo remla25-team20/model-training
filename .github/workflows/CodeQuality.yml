@@ -45,6 +45,7 @@ jobs:
         with:
           name: pylint_badge.svg
           path: pylint.svg
+          compression-level: 0 # no compression
 
   flake8:
     name: Flake8 Check
