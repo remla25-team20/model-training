@@ -30,9 +30,38 @@ jobs:
           poetry install
           poetry run pip install -e ./lib-ml
 
-      - name: Run pylint on src/
+      - name: Run pylint on src/ and store output
         run: |
-          PYTHONPATH=. poetry run pylint src/
+          pylint_score=$(PYTHONPATH=. poetry run pylint src/ | tr / " " | grep "Your code has been rated at" | awk '{print $7}')
+          echo "pylint_score=$pylint_score" >> $GITHUB_OUTPUT
+        id: pylint_calc
+      - name: Generate pylint badge
+        run: |
+          echo "The pylint value equals ${{ steps.pylint_calc.outputs.pylint_score }}"
+          pip install anybadge
+          anybadge -l pylint -v ${{ steps.pylint_calc.outputs.pylint_score }} -f pylint.svg 2=red 4=orange 8=yellow 10=green
+      - name: Store pylint badge as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pylint_badge
+          path: pylint.svg
+          compression-level: 0 # no compression
+          overwrite: true
+      
+      - name: Checkout original repository
+        uses: actions/checkout@v3
+        with:
+          clean: false
+        
+      - name: Commit pylint badge to repository
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          mkdir -p badges
+          mv pylint.svg badges/pylint_badge.svg
+          git add badges/pylint_badge.svg
+          git commit -m "Update pylint badge" || true # see below
+          git push || true  # adding true statement to avoid error on "nothing to commit"
 
   flake8:
     name: Flake8 Check
@@ -50,6 +79,35 @@ jobs:
         run: |
           poetry install
 
-      - name: Run flake8 on src/
+      - name: Run flake8 on src/ and store pass/fail status
         run: |
-          poetry run flake8 src/
+          if poetry run flake8 src/ --verbose; then flake="passing"; else flake="failing"; fi
+          echo "flake=$flake" >> $GITHUB_OUTPUT
+        id: flake_calc
+      - name: Generate flake badge
+        run: |
+          echo "The flake8 status equals ${{ steps.flake_calc.outputs.flake }}"
+          pip install anybadge
+          anybadge -l flake8 -v ${{ steps.flake_calc.outputs.flake }} -f flake.svg passing=green failing=red
+      - name: Store flake8 badge as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: flake_badge
+          path: flake.svg
+          compression-level: 0 # no compression
+          overwrite: true
+      
+      - name: Checkout original repository
+        uses: actions/checkout@v3
+        with:
+          clean: false
+        
+      - name: Commit pylint badge to repository
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          mkdir -p badges
+          mv flake.svg badges/flake_badge.svg
+          git add badges/flake_badge.svg
+          git commit -m "Update flake badge" || true # see below
+          git push || true  # adding true statement to avoid error on "nothing to commit"

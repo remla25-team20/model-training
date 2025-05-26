@@ -1,6 +1,6 @@
 [![Code Quality](https://github.com/remla25-team20/model-training/actions/workflows/CodeQuality.yml/badge.svg)](https://github.com/remla25-team20/model-training/actions/workflows/CodeQuality.yml)
-
-
+[![PyLint](/badges/pylint_badge.svg)](https://github.com/remla25-team20/model-training/actions/workflows/CodeQuality.yml)
+[![Flake8](/badges/flake_badge.svg)](https://github.com/remla25-team20/model-training/actions/workflows/CodeQuality.yml)
 # model-training
 
 This repository contains the training pipeline for a sentiment analysis model built for restaurant reviews, used as part of the Release Engineering course.
