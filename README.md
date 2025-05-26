@@ -85,7 +85,8 @@ We use both **pylint** and **flake8** to enforce code quality in the `src/` dire
 ### 🔧 Run locally using poetry
 
 ```bash
-poetry run pylint src/
+# Important: PYTHONPATH=. is required so that custom pylint plugins are discoverable
+PYTHONPATH=. poetry run pylint src/
 poetry run flake8 src/
 ```
 
@@ -117,6 +118,28 @@ All pipeline parameters are stored in `params.yaml` and versioned using DVC. The
 ```
 import dvc.api
 params = dvc.api.params_show()
+```
+
+## 🔐 DVC Remote Access Setup
+
+This project uses a shared Google Drive folder as a DVC remote. To push or pull data, you need to authenticate with your own Google account via the Drive API.
+
+We strongly recommend setting up your own Google Cloud OAuth credentials to avoid "This app is blocked" errors. 
+
+👉 Follow these instructions from the official DVC docs up untill step 6:
+[Using a Custom Google Cloud project](https://dvc.org/doc/user-guide/data-management/remote-storage/google-drive#using-a-custom-google-cloud-project-recommended)
+
+Finally, use the `dvc remote modify` command to set the credentials:
+
+```bash
+dvc remote modify group20remote gdrive_client_id 'YOUR_CLIENT_ID' --local
+dvc remote modify group20remote gdrive_client_secret 'YOUR_CLIENT_SECRET' --local
+```
+
+Then you can run
+
+```bash
+dvc pull
 ```
 
 ## 🔁 Reproducing Results with DVC

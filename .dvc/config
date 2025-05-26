@@ -1,0 +1,5 @@
+[core]
+    remote = group20remote
+
+['remote "group20remote"']
+    url = gdrive://17eUx63cFfDfBcbN5xV8YqnoK49SF363p
