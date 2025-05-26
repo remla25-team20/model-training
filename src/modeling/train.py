@@ -7,11 +7,11 @@ from sklearn.naive_bayes import GaussianNB
 
 PARAMS = dvc.api.params_show("params.yaml")
 
-def train(dataset_dir: Path, target_dir):
+def train(dataset_dir: Path, target_dir, **kwargs):
     X_train = joblib.load(dataset_dir / "X_train.joblib")
     y_train = joblib.load(dataset_dir / "y_train.joblib")
 
-    classifier = GaussianNB()
+    classifier = GaussianNB(**kwargs)
     classifier.fit(X_train, y_train)
 
     if not os.path.exists(target_dir):
