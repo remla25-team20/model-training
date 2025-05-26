@@ -47,10 +47,15 @@ jobs:
           path: pylint.svg
           compression-level: 0 # no compression
           overwrite: true
+      
+      - name: Checkout original repository
+        uses: actions/checkout@v3
+        
       - name: Commit pylint badge to repository
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
+          mkdir -p badges
           mv pylint.svg badges/pylint_badge.svg
           git add badges/pylint_badge.svg
           git commit -m "Update pylint badge"
