@@ -1,0 +1,55 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  pylint:
+    name: Pylint Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Checkout lib-ml repo
+        uses: actions/checkout@v3
+        with:
+          repository: remla25-team20/lib-ml
+          path: lib-ml
+
+      - name: Install Poetry
+        run: |
+          pip install poetry
+
+      - name: Install dependencies via Poetry
+        run: |
+          poetry install
+          poetry run pip install -e ./lib-ml
+
+      - name: Run pylint on src/
+        run: |
+          PYTHONPATH=. poetry run pylint src/
+
+  flake8:
+    name: Flake8 Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Poetry
+        run: |
+          pip install poetry
+
+      - name: Install dependencies via Poetry
+        run: |
+          poetry install
+
+      - name: Run flake8 on src/
+        run: |
+          poetry run flake8 src/
