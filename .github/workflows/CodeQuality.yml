@@ -36,11 +36,8 @@ jobs:
           echo "pylint_score=$pylint_score" >> $GITHUB_OUTPUT
       - name: Generate pylint badge
         run: |
-          echo $pylint_score
           pip install anybadge
-          anybadge -l pylint -v $pylint_score -f pylint.svg 2=red 4=orange 8=yellow 10=green
-        env:
-          pylint_score: ${{ needs.pylint.outputs.pylint_score }}
+          anybadge -l pylint -v ${steps.pylint.outputs.pylint_score} -f pylint.svg 2=red 4=orange 8=yellow 10=green
       - name: Store pylint badge as artifact
         uses: actions/upload-artifact@v4
         with:
