@@ -81,7 +81,7 @@ jobs:
 
       - name: Run flake8 on src/ and store pass/fail status
         run: |
-          if poetry run flake8 src/ --verbose; then flake="passing" else flake="failing" fi
+          if poetry run flake8 src/ --verbose; then flake="passing"; else flake="failing"; fi
           echo "flake=$flake" >> $GITHUB_OUTPUT
         id: flake_calc
       - name: Generate flake badge
