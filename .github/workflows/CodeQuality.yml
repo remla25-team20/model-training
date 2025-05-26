@@ -61,7 +61,7 @@ jobs:
           mv pylint.svg badges/pylint_badge.svg
           git add badges/pylint_badge.svg
           git commit -m "Update pylint badge"
-          git push
+          git push || true  # adding true statement to avoid error on "nothing to commit"
 
   flake8:
     name: Flake8 Check
