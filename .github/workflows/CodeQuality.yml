@@ -14,26 +14,25 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
+        
       - name: Checkout lib-ml repo
         uses: actions/checkout@v3
         with:
           repository: remla25-team20/lib-ml
           path: lib-ml
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: Install dependencies
+      - name: Install Poetry
         run: |
-          pip install -r requirements.txt
-          pip install pylint
-          pip install -e ./lib-ml
+          pip install poetry
 
-      - name: Run pylint on src/ only with plugin
-        run: PYTHONPATH=. pylint src/
+      - name: Install dependencies via Poetry
+        run: |
+          poetry install
+          poetry run pip install -e ./lib-ml
+
+      - name: Run pylint on src/
+        run: |
+          PYTHONPATH=. poetry run pylint src/
 
   flake8:
     name: Flake8 Check
@@ -43,15 +42,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: Install dependencies
+      - name: Install Poetry
         run: |
-          pip install -r requirements.txt
-          pip install flake8
+          pip install poetry
 
-      - name: Run flake8 on src/ only
-        run: flake8 src/
+      - name: Install dependencies via Poetry
+        run: |
+          poetry install
+
+      - name: Run flake8 on src/
+        run: |
+          poetry run flake8 src/
