@@ -39,19 +39,19 @@ jobs:
         run: |
           echo "The pylint value equals ${{ steps.pylint_calc.outputs.pylint_score }}"
           pip install anybadge
-          anybadge -l pylint -v ${{ steps.pylint_calc.outputs.pylint_score }} -f out/pylint.svg 2=red 4=orange 8=yellow 10=green
+          anybadge -l pylint -v ${{ steps.pylint_calc.outputs.pylint_score }} -f pylint.svg 2=red 4=orange 8=yellow 10=green
       - name: Store pylint badge as artifact
         uses: actions/upload-artifact@v4
         with:
           name: pylint_badge
-          path: out/pylint.svg
+          path: pylint.svg
           compression-level: 0 # no compression
           overwrite: true
       - name: Commit pylint badge to repository
         run:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          mv pylint_badge.svg badges/pylint_badge.svg
+          mv pylint.svg badges/pylint_badge.svg
           git add badges/pylint_badge.svg
           git commit -m "Update pylint badge"
           git push
