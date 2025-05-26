@@ -37,7 +37,7 @@ jobs:
       - name: Generate pylint badge
         run: |
           pip install anybadge
-          anybadge -l pylint -v ${steps.pylint.outputs.pylint_score} -f pylint.svg 2=red 4=orange 8=yellow 10=green
+          anybadge -l pylint -v ${{ steps.pylint.outputs.pylint_score }} -f pylint.svg 2=red 4=orange 8=yellow 10=green
       - name: Store pylint badge as artifact
         uses: actions/upload-artifact@v4
         with:
