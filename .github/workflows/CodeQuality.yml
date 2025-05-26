@@ -48,7 +48,7 @@ jobs:
           compression-level: 0 # no compression
           overwrite: true
       - name: Commit pylint badge to repository
-        run:
+        run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           mv pylint.svg badges/pylint_badge.svg
