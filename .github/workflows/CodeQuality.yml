@@ -86,7 +86,7 @@ jobs:
         id: flake_calc
       - name: Generate flake badge
         run: |
-          echo "The flake8 status equals ${{ steps.flake_calc.outputs.pylint_score }}"
+          echo "The flake8 status equals ${{ steps.flake_calc.outputs.flake }}"
           pip install anybadge
           anybadge -l flake8 -v ${{ steps.flake_calc.outputs.flake }} -f flake.svg passing=green failing=red
       - name: Store flake8 badge as artifact
