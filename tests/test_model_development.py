@@ -1,10 +1,13 @@
 import pytest
 import os
+import csv
 import dvc.api
 import gdown
+import joblib
 
 from pathlib import Path
 from data.preprocess import preprocess
+import lib_ml.preprocessing
 from modeling.train import train
 from modeling.evaluation import predict
 
@@ -49,3 +52,25 @@ class TestModelDevelopment:
         assert abs(recall_model1 - recall_model2) <= 0.03
         assert abs(accuracy_model1 - accuracy_model2) <= 0.03
         assert abs(f1_acc_model1 - f1_acc_model2) <= 0.03
+
+    def test_preprocessing_encoding_adequacy(self):
+        """
+        The preprocessing should successfully encode a sufficiently large segment of the data
+        :return: True iff at least 75% of non-stopwords are encoded, False otherwise
+        """
+        count_word = 0
+        count_encoding = 0
+
+        count_vectorizer = joblib.load(PARAMS["models_directory"] + "/Sentiment_Analysis_Preprocessor.joblib")
+
+        with open(PARAMS["data_directory"], "r") as data:
+            f = csv.reader(data, delimiter="\t")
+            next(f)     # skip header
+            for review, _ in f:
+                raw_review = lib_ml.preprocessing._text_process(review)
+                count_word += 1 + raw_review.count(" ")
+                vectorized_review = count_vectorizer.transform(raw_review)
+                count_encoding += sum(vectorized_review)
+        print(count_word)
+        print(count_encoding)
+        assert count_encoding / count_word > 0.75
