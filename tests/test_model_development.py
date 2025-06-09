@@ -29,6 +29,7 @@ def init_train_test_data():
         random_state=PARAMS['random_state']
         )
 
+
 class TestModelDevelopment:
     def test_model_seed_robustness(self, init_train_test_data):
         # Train and evaluate first model
@@ -53,7 +54,7 @@ class TestModelDevelopment:
         assert abs(accuracy_model1 - accuracy_model2) <= 0.03
         assert abs(f1_acc_model1 - f1_acc_model2) <= 0.03
 
-    def test_preprocessing_encoding_adequacy(self):
+    def test_preprocessing_encoding_adequacy(self, init_train_test_data):
         """
         The preprocessing should successfully encode a sufficiently large segment of the data
         :return: True iff at least 75% of non-stopwords are encoded, False otherwise
@@ -61,16 +62,16 @@ class TestModelDevelopment:
         count_word = 0
         count_encoding = 0
 
-        count_vectorizer = joblib.load(PARAMS["models_directory"] + "/Sentiment_Analysis_Preprocessor.joblib")
+        count_vectorizer = joblib.load(Path(PARAMS["models_directory"] + "/Sentiment_Analysis_Preprocessor.joblib"))
 
-        with open(PARAMS["data_directory"], "r") as data:
+        with open(Path(PARAMS['data_directory']) / PARAMS['file_path_gdrive'], "r") as data:
             f = csv.reader(data, delimiter="\t")
             next(f)     # skip header
             for review, _ in f:
                 raw_review = lib_ml.preprocessing._text_process(review)
-                count_word += 1 + raw_review.count(" ")
-                vectorized_review = count_vectorizer.transform(raw_review)
-                count_encoding += sum(vectorized_review)
-        print(count_word)
-        print(count_encoding)
-        assert count_encoding / count_word > 0.75
+                count_word += len(raw_review)
+                vc_review = count_vectorizer.transform(raw_review)
+                count_encoding += int(vc_review.sum())
+        assert count_encoding <= count_word
+        assert (count_encoding / count_word) > 0.75
+        print(f"Hit rate of {round(count_encoding/count_word, 2)}")
