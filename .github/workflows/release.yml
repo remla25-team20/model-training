@@ -2,7 +2,7 @@ name: Release models
 
 on:
   push:
-    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+    tags: ["v[0-9]+.[0-9]+.[0-9]+*"]
 
 jobs:
     train-and-release:
