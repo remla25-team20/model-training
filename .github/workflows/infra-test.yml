@@ -3,7 +3,7 @@ on: push
 jobs:
   infra-test:
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
     runs-on: ubuntu-24.04
     steps:
@@ -53,6 +53,7 @@ jobs:
               echo "Accuracy is acceptable: $acc"
               STATUS=0
           fi
+          echo "STATUS=$STATUS" >> $GITHUB_ENV
     
       - name: Set badge
         run: |
@@ -69,7 +70,13 @@ jobs:
           path: infra-test-badge.svg
           compression-level: 0
           overwrite: true
-          
+  
+      - name: Fetch and checkout correct branch
+        run: |
+            git fetch origin $GITHUB_REF_NAME
+            git checkout $GITHUB_REF_NAME
+            git pull origin $GITHUB_REF_NAME
+            
       - name: Commit badge to repository
         run: |
           git config user.name "github-actions"
