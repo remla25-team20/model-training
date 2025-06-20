@@ -19,8 +19,13 @@ jobs:
       - name: Install dependencies
         run: |
             python -m pip install --upgrade pip
-            pip install poetry
+            pip install poetry anybadge
             poetry install --with dev
+
+      - name: Authenticate DVC
+        run: |
+            poetry run dvc remote modify --local group20remote gdrive_client_id ${{ secrets.GDRIVE_CLIENT_ID }} --local
+            poetry run dvc remote modify --local group20remote gdrive_client_secret ${{ secrets.GDRIVE_CLIENT_SECRET }} --local
 
       - name: Pull DVC data
         run: poetry run dvc pull
@@ -33,13 +38,41 @@ jobs:
           acc=$(poetry run dvc exp show --csv | grep "infra-test" | awk -F ',' '{$6}')
           if [ -z "$acc" ]; then
               echo "No accuracy found for infra-test"
-              exit 1
+              STATUS=1
           fi
           if (( $(echo "$acc < 0.1" | bc -l) )); then
               echo "Accuracy is below threshold: $acc"
-              exit 1
+              STATUS=1
           else
               echo "Accuracy is acceptable: $acc"
+              STATUS=0
           fi
-        
-        
+    
+      - name: Set badge
+        run: |
+          if [ $STATUS -eq 0 ]; then
+              poetry run anybadge --label=pipeline --value=healthy --color=green --file=infra-test-badge.svg
+          else
+              poetry run anybadge --label=pipeline --value=failed --color=red --file=infra-test-badge.svg
+          fi
+  
+      - name: Upload badge
+        uses: actions/upload-artifact@v4
+        with:
+          name: infra-test-badge
+          path: infra-test-badge.svg
+          compression-level: 0
+          overwrite: true
+          
+      - name: Commit badge to repository
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          mkdir -p badges
+          mv infra-test-badge.svg badges/infra-test-badge.svg
+          git add badges/infra-test-badge.svg
+          git commit -m "Update infra-test-badge" || true # see below
+          git push || true  # adding true statement to avoid error on "nothing to commit"
+    
+      - name: Exit with status
+        run: exit $STATUS
