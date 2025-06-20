@@ -1,0 +1,45 @@
+name: 'infra-test'
+on: push
+jobs:
+  infra-test:
+    permissions:
+      contents: read
+      pull-requests: write
+    runs-on: ubuntu-24.04
+    steps:
+
+      - name: Checkout branch
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+  
+      - name: Install dependencies
+        run: |
+            python -m pip install --upgrade pip
+            pip install poetry
+            poetry install --with dev
+
+      - name: Pull DVC data
+        run: poetry run dvc pull
+    
+      - name: Perform experiment
+        run: poetry run dvc exp run --name infra-test
+
+      - name: Check accuracy
+        run: |
+          acc=$(poetry run dvc exp show --csv | grep "infra-test" | awk -F ',' '{$6}')
+          if [ -z "$acc" ]; then
+              echo "No accuracy found for infra-test"
+              exit 1
+          fi
+          if (( $(echo "$acc < 0.1" | bc -l) )); then
+              echo "Accuracy is below threshold: $acc"
+              exit 1
+          else
+              echo "Accuracy is acceptable: $acc"
+          fi
+        
+        
