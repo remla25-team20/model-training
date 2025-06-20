@@ -21,11 +21,17 @@ jobs:
             python -m pip install --upgrade pip
             pip install poetry anybadge
             poetry install --with dev
-
-      - name: Authenticate DVC
+        
+      - name: Write service account JSON to file
+        env:
+          GDRIVE_JSON: ${{ secrets.GDRIVE_SA_JSON }}
         run: |
-            poetry run dvc remote modify --local group20remote gdrive_client_id ${{ secrets.GDRIVE_CLIENT_ID }}
-            poetry run dvc remote modify --local group20remote gdrive_client_secret ${{ secrets.GDRIVE_CLIENT_SECRET }}
+          python -c "import os; open('sa.json', 'w').write(os.environ['GDRIVE_JSON'])"
+
+      - name: Authenticate service account
+        run: |
+            poetry run dvc remote modify --local group20remote gdrive_use_service_account true
+            poetry run dvc remote modify --local group20remote gdrive_service_account_json_file_path sa.json
 
       - name: Pull DVC data
         run: poetry run dvc pull
