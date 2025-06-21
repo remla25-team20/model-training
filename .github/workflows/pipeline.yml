@@ -1,0 +1,128 @@
+name: Pipeline Test
+on:
+  workflow_run:
+    workflows: ["Release models"]
+    types:
+      - completed
+
+jobs:
+  pipe-test:
+    runs-on: ubuntu-24.04
+    steps:
+
+      - name: Checkout branch
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+  
+      - name: Install dependencies
+        run: |
+            python -m pip install --upgrade pip
+            pip install poetry anybadge
+            poetry install --with dev
+        
+      - name: Write service account JSON to file
+        env:
+          GDRIVE_JSON: ${{ secrets.GDRIVE_SA_JSON }}
+        run: |
+          python -c "import os; open('sa.json', 'w').write(os.environ['GDRIVE_JSON'])"
+
+      - name: Authenticate service account
+        run: |
+            poetry run dvc remote modify --local group20remote gdrive_use_service_account true
+            poetry run dvc remote modify --local group20remote gdrive_service_account_json_file_path sa.json
+
+      - name: Pull DVC data
+        run: poetry run dvc pull
+    
+      - name: Perform experiment
+        run: poetry run dvc exp run --name pipe-test
+
+      - name: Check accuracy
+        run: |
+          acc=$(poetry run dvc exp show --csv | grep "pipe-test" | awk -F ',' '{$6}')
+          if [ -z "$acc" ]; then
+              echo "No accuracy found for pipe-test"
+              STATUS=1
+          fi
+          if (( $(echo "$acc < 0.1" | bc -l) )); then
+              echo "Accuracy is below threshold: $acc"
+              STATUS=1
+          else
+              echo "Accuracy is acceptable: $acc"
+              STATUS=0
+          fi
+          echo "STATUS=$STATUS" >> $GITHUB_ENV
+  
+      - name: List releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release list
+
+      - name: Download releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download v${GITHUB_REF_NAME} -p "Sentiment_Analysis_Model.joblib"
+          gh release download v${GITHUB_REF_NAME} -p "Sentiment_Analysis_Preprocessor.joblib"
+        
+      - name: Check if files exist
+        run: |
+          if [ ! -f "Sentiment_Analysis_Model.joblib" ]; then
+              echo "Sentiment_Analysis_Model.joblib not found"
+              STATUS=1
+          fi
+          if [ ! -f "Sentiment_Analysis_Preprocessor.joblib" ]; then
+              echo "Sentiment_Analysis_Preprocessor.joblib not found"
+              STATUS=1
+          fi
+          echo "STATUS=$STATUS" >> $GITHUB_ENV
+        
+      - name: Check model
+        run: |
+          poetry run python -c "
+          import joblib
+          model = joblib.load('Sentiment_Analysis_Model.joblib')
+          preprocessor = joblib.load('Sentiment_Analysis_Preprocessor.joblib')
+          dummy = ['This is a test sentence.']
+          X = preprocessor.transform(dummy)
+          pred = model.predict(X.toarray())
+          " || echo "1=$STATUS" >> $GITHUB_ENV
+          
+      - name: Set badge
+        run: |
+          if [ $STATUS -eq 0 ]; then
+              poetry run anybadge --label=pipeline --value=healthy --color=green --file=pipe_test_badge.svg
+          else
+              poetry run anybadge --label=pipeline --value=failed --color=red --file=pipe_test_badge.svg
+          fi
+  
+      - name: Upload badge
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipe_test_badge
+          path: pipe_test_badge.svg
+          compression-level: 0
+          overwrite: true
+  
+      - name: Fetch and checkout correct branch
+        run: |
+            git fetch origin $GITHUB_REF_NAME
+            git checkout $GITHUB_REF_NAME
+            git pull origin $GITHUB_REF_NAME
+            
+      - name: Commit badge to repository
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          mkdir -p badges
+          mv pipe_test_badge.svg badges/pipe_test_badge.svg
+          git add badges/pipe_test_badge.svg
+          git commit -m "Update pipe_test_badge" || true # see below
+          git push || true  # adding true statement to avoid error on "nothing to commit"
+    
+      - name: Exit with status
+        run: exit $STATUS

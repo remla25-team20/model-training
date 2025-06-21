@@ -26,8 +26,8 @@ stages:
       nfiles: 1
     - path: src/data/preprocess.py
       hash: md5
-      md5: 78ffc8f9ab6f438221e95cf41e565935
-      size: 1424
+      md5: 663696303fc58eeada03f1b9ec3065de
+      size: 1412
     params:
       params.yaml:
         data_directory: data/external/
