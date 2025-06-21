@@ -56,19 +56,22 @@ jobs:
               STATUS=0
           fi
           echo "STATUS=$STATUS" >> $GITHUB_ENV
-  
-      - name: List releases
+
+      - name: Get latest published release tag
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release list
+        run: |
+          LATEST_TAG=$(gh release list | grep -v Draft | grep -v Pre-release | head -n1 | awk '{print $1}')
+          echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
 
       - name: Download releases
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release download v${GITHUB_REF_NAME} -p "Sentiment_Analysis_Model.joblib"
-          gh release download v${GITHUB_REF_NAME} -p "Sentiment_Analysis_Preprocessor.joblib"
-        
+          echo "LATEST_TAG is $LATEST_TAG"
+          gh release download "$LATEST_TAG" -p "Sentiment_Analysis_Model.joblib"
+          gh release download "$LATEST_TAG" -p "Sentiment_Analysis_Preprocessor.joblib"
+
       - name: Check if files exist
         run: |
           if [ ! -f "Sentiment_Analysis_Model.joblib" ]; then
