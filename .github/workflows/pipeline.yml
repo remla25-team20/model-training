@@ -1,5 +1,9 @@
 name: Pipeline Test
-on: push
+on:
+  workflow_run:
+    workflows: ["Release models"]
+    types:
+      - completed
 
 jobs:
   pipe-test:
@@ -62,9 +66,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "${GITHUB_REF_NAME}"
-          gh release download v0.1.7-beta -p "Sentiment_Analysis_Model.joblib"
-          gh release download v0.1.7-beta -p "Sentiment_Analysis_Preprocessor.joblib"
+          gh release download v${GITHUB_REF_NAME} -p "Sentiment_Analysis_Model.joblib"
+          gh release download v${GITHUB_REF_NAME} -p "Sentiment_Analysis_Preprocessor.joblib"
         
       - name: Check if files exist
         run: |
